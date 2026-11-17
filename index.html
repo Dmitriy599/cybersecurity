@@ -1,0 +1,91 @@
+options: ['12345678', 'qwerty', 'Tr0ub4dor&3x!', 'password2025'],
+    correct: 2
+  },
+  {
+    q: 'Что такое фишинг?',
+    options: [
+      'Рыбалка в интернете',
+      'Мошенничество с подделкой сайтов и писем',
+      'Способ ускорить интернет',
+      'Антивирусная программа'
+    ],
+    correct: 1
+  },
+  {
+    q: 'Пришло SMS: «Код для отмены перевода, сообщите его сотруднику банка». Что делать?',
+    options: [
+      'Сообщить код — это же банк',
+      'Перезвонить по номеру из SMS',
+      'Никому не сообщать код и связаться с банком по официальному номеру',
+      'Ответить на SMS'
+    ],
+    correct: 2
+  },
+  {
+    q: 'Зачем нужна двухфакторная аутентификация?',
+    options: [
+      'Чтобы усложнить вход даже при утечке пароля',
+      'Чтобы ускорить загрузку сайта',
+      'Чтобы получать рекламу',
+      'Она не нужна'
+    ],
+    correct: 0
+  }
+];
+
+let current = 0;
+const qEl = document.getElementById('question');
+const optEl = document.getElementById('options');
+const resEl = document.getElementById('quizResult');
+
+function renderQuestion() {
+  if (current >= questions.length) {
+    qEl.textContent = 'Тест завершён! 🎉';
+    optEl.innerHTML = '';
+    resEl.innerHTML = '<button class="opt" style="max-width:200px" onclick="restartQuiz()">Пройти снова</button>';
+    return;
+  }
+  const item = questions[current];
+  qEl.textContent = ${current + 1}. ${item.q};
+  optEl.innerHTML = '';
+  resEl.textContent = '';
+  item.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = opt;
+    btn.onclick = () => answer(i, btn);
+    optEl.appendChild(btn);
+  });
+}
+
+function answer(i, btn) {
+  const item = questions[current];
+  const buttons = optEl.querySelectorAll('button');
+  buttons.forEach(b => b.disabled = true);
+
+  if (i === item.correct) {
+    btn.classList.add('correct');
+    resEl.textContent = '✅ Верно!';
+    resEl.style.color = '#00ff9d';
+  } else {
+    btn.classList.add('wrong');
+    buttons[item.correct].classList.add('correct');
+    resEl.textContent = '❌ Неверно. Правильный ответ подсвечен зелёным.';
+    resEl.style.color = '#ff4d6d';
+  }
+
+  setTimeout(() => {
+    current++;
+    renderQuestion();
+  }, 1600);
+}
+
+function restartQuiz() {
+  current = 0;
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
